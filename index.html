@@ -23,13 +23,13 @@
       max-width: 460px;
       overflow: hidden; /* Faz o cabeçalho azul respeitar as bordas arredondadas */
     }
-    /* Cabeçalho com o Azul Profundo da TOTVS*/
+    /* Cabeçalho com o Azul Profundo da TOTVS */
     .card-header {
       background-color: #002233;
       padding: 28px 32px;
       text-align: center;
     }
-    .card-header img{
+    .card-header img {
       max-height: 44px; /* Altura proporcional da logo */
       width: auto;
       display: block;
@@ -51,16 +51,16 @@
       font-size: 15px;
       transition: all 0.2s;
     }
-    input:focus { 
-      outline: none; 
-      border-color: #002233; 
-      box-shadow: 0 0 0 3px rgba(0, 34, 51, 0.12); 
+    input:focus {
+      outline: none;
+      border-color: #002233;
+      box-shadow: 0 0 0 3px rgba(0, 34, 51, 0.12);
     }
     button {
       width: 100%;
       padding: 14px;
       background-color: #002233;
-      color: ffffff;
+      color: #ffffff;
       border: none;
       border-radius: 8px;
       font-size: 16px;
@@ -70,7 +70,7 @@
       margin-top: 8px;
     }
     button:hover { background-color: #043852; }
-    button:active{transform: scale(0.99); }
+    button:active { transform: scale(0.99); }
     button:disabled { background-color: #7b8794; cursor: not-allowed; }
     #mensagem {
       margin-top: 18px;
@@ -90,48 +90,44 @@
   <div class="card">
     <!-- Faixa superior com a cor e logo da TOTVS -->
     <div class="card-header">
-      <h2>img src="logo-totvs.png" alt="Logo TOTVS"</h2>
+      <img src="logo-totvs.png" alt="Logo TOTVS">
     </div>
 
     <div class="card-body">
-    <h2>Inscrição para Treinamentos</h2>
-    <p>Preencha os dados abaixo para confirmar sua participação em nossas sessões de capacitação.</p>
+      <h2>Inscrição para Treinamentos</h2>
+      <p>Preencha os dados abaixo para confirmar sua participação em nossas sessões de capacitação.</p>
 
-    <form id="formInscricao" onsubmit="enviarParaGoogleForms(event)">
-      <div class="form-group">
-        <label for="nome">Nome completo *</label>
-        <input type="text" id="nome" placeholder="Ex: João Silva" required>
-      </div>
+      <form id="formInscricao" onsubmit="enviarParaGoogleForms(event)">
+        <div class="form-group">
+          <label for="nome">Nome completo *</label>
+          <input type="text" id="nome" placeholder="Ex: João Silva" required>
+        </div>
 
-      <div class="form-group">
-        <label for="email">E-mail corporativo *</label>
-        <input type="email" id="email" placeholder="joao@empresa.com.br" required>
-      </div>
+        <div class="form-group">
+          <label for="email">E-mail corporativo *</label>
+          <input type="email" id="email" placeholder="joao@empresa.com.br" required>
+        </div>
 
-      <div class="form-group">
-        <label for="empresa">Empresa *</label>
-        <input type="text" id="empresa" placeholder="Nome da sua empresa" required>
-      </div>
+        <div class="form-group">
+          <label for="empresa">Empresa *</label>
+          <input type="text" id="empresa" placeholder="Nome da sua empresa" required>
+        </div>
 
-      <button type="submit" id="btnEnviar">Confirmar Inscrição</button>
-    </form>
+        <button type="submit" id="btnEnviar">Confirmar Inscrição</button>
+      </form>
 
-    <div id="mensagem"></div>
+      <div id="mensagem"></div>
+    </div>
   </div>
-</div>
-  
+
   <script>
-    // =========================================================================
-    // CONFIGURAÇÃO: COLE AQUI OS DADOS QUE VOCÊ EXTRAIU DO SEU GOOGLE FORMS
-    // =========================================================================
-    const URL_ENVIO_FORMS = "https://docs.google.com/forms/d/e/1FAIpQLSdmmVlYDORcFLbA2e1jt_h5Lvsezq4oR1pP_pWj3nwZgcdX7g/formResponse";
-    const ID_CAMPO_NOME   = "entry.2021482454"; // Substitua pelo entry do Nome
-    const ID_CAMPO_EMAIL  = "entry.1810517846"; // Substitua pelo entry do E-mail
-    const ID_CAMPO_EMPRESA= "entry.1150958815"; // Substitua pelo entry da Empresa
-    // =========================================================================
+    const URL_ENVIO_FORMS  = "https://docs.google.com/forms/d/e/1FAIpQLSdmmVlYDORcFLbA2e1jt_h5Lvsezq4oR1pP_pWj3nwZgcdX7g/formResponse";
+    const ID_CAMPO_NOME    = "entry.2021482454";
+    const ID_CAMPO_EMAIL   = "entry.1810517846";
+    const ID_CAMPO_EMPRESA = "entry.1150958815";
 
     function enviarParaGoogleForms(event) {
-      event.preventDefault(); // Evita que a página recarregue
+      event.preventDefault();
 
       const btn = document.getElementById('btnEnviar');
       const msg = document.getElementById('mensagem');
@@ -140,20 +136,17 @@
       btn.innerText = 'Enviando inscrição...';
       msg.style.display = 'none';
 
-      // Monta o pacote de dados no formato que o Google Forms espera
       const dadosFormulario = new FormData();
       dadosFormulario.append(ID_CAMPO_NOME, document.getElementById('nome').value.trim());
       dadosFormulario.append(ID_CAMPO_EMAIL, document.getElementById('email').value.trim());
       dadosFormulario.append(ID_CAMPO_EMPRESA, document.getElementById('empresa').value.trim());
 
-      // Envia silenciosamente em segundo plano (mode: 'no-cors' evita bloqueio do navegador)
       fetch(URL_ENVIO_FORMS, {
         method: 'POST',
         mode: 'no-cors',
         body: dadosFormulario
       })
       .then(() => {
-        // Como 'no-cors' não retorna leitura da resposta, se não caiu no catch, foi enviado!
         msg.className = 'sucesso';
         msg.innerText = 'Inscrição confirmada com sucesso! Nos vemos no treinamento.';
         msg.style.display = 'block';
