@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inscrição para Treinamentos</title>
+  <style>
+    * { box-sizing: border-box; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+    body {
+      background-color: #f0f4f8;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px;
+    }
+    .card {
+      background: #ffffff;
+      padding: 36px;
+      border-radius: 12px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+      width: 100%;
+      max-width: 450px;
+      border-top: 5px solid #002233; /* Azul escuro corporativo */
+    }
+    h2 { margin-top: 0; color: #002233; font-size: 24px; }
+    p { color: #52606d; font-size: 14px; margin-bottom: 24px; line-height: 1.5; }
+    .form-group { margin-bottom: 18px; }
+    label { display: block; margin-bottom: 6px; font-weight: 600; color: #1f2933; font-size: 14px; }
+    input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #cbd2d9;
+      border-radius: 8px;
+      font-size: 15px;
+      transition: all 0.2s;
+    }
+    input:focus { outline: none; border-color: #00a8e8; box-shadow: 0 0 0 3px rgba(0, 168, 232, 0.15); }
+    button {
+      width: 100%;
+      padding: 14px;
+      background-color: #0077b6;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.2s;
+      margin-top: 8px;
+    }
+    button:hover { background-color: #005f92; }
+    button:disabled { background-color: #9fb3c8; cursor: not-allowed; }
+    #mensagem {
+      margin-top: 18px;
+      padding: 14px;
+      border-radius: 8px;
+      font-size: 14px;
+      text-align: center;
+      display: none;
+      font-weight: 500;
+    }
+    .sucesso { background-color: #d1fae5; color: #065f46; border: 1px solid #a7f3d0; }
+    .erro { background-color: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <h2>Inscrição para Treinamentos</h2>
+    <p>Preencha os dados abaixo para confirmar sua participação em nossas sessões de capacitação.</p>
+
+    <form id="formInscricao" onsubmit="enviarParaGoogleForms(event)">
+      <div class="form-group">
+        <label for="nome">Nome completo *</label>
+        <input type="text" id="nome" placeholder="Ex: João Silva" required>
+      </div>
+
+      <div class="form-group">
+        <label for="email">E-mail corporativo *</label>
+        <input type="email" id="email" placeholder="joao@empresa.com.br" required>
+      </div>
+
+      <div class="form-group">
+        <label for="empresa">Empresa *</label>
+        <input type="text" id="empresa" placeholder="Nome da sua empresa" required>
+      </div>
+
+      <button type="submit" id="btnEnviar">Confirmar Inscrição</button>
+    </form>
+
+    <div id="mensagem"></div>
+  </div>
+
+  <script>
+    // =========================================================================
+    // CONFIGURAÇÃO: COLE AQUI OS DADOS QUE VOCÊ EXTRAIU DO SEU GOOGLE FORMS
+    // =========================================================================
+    const URL_ENVIO_FORMS = https://docs.google.com/forms/d/e/1FAIpQLSdmmVlYDORcFLbA2e1jt_h5Lvsezq4oR1pP_pWj3nwZgcdX7g/formResponse;
+    const ID_CAMPO_NOME   = entry.2021482454; // Substitua pelo entry do Nome
+    const ID_CAMPO_EMAIL  = entry.1810517846; // Substitua pelo entry do E-mail
+    const ID_CAMPO_EMPRESA= entry.1150958815; // Substitua pelo entry da Empresa
+    // =========================================================================
+
+    function enviarParaGoogleForms(event) {
+      event.preventDefault(); // Evita que a página recarregue
+
+      const btn = document.getElementById('btnEnviar');
+      const msg = document.getElementById('mensagem');
+
+      btn.disabled = true;
+      btn.innerText = 'Enviando inscrição...';
+      msg.style.display = 'none';
+
+      // Monta o pacote de dados no formato que o Google Forms espera
+      const dadosFormulario = new FormData();
+      dadosFormulario.append(ID_CAMPO_NOME, document.getElementById('nome').value.trim());
+      dadosFormulario.append(ID_CAMPO_EMAIL, document.getElementById('email').value.trim());
+      dadosFormulario.append(ID_CAMPO_EMPRESA, document.getElementById('empresa').value.trim());
+
+      // Envia silenciosamente em segundo plano (mode: 'no-cors' evita bloqueio do navegador)
+      fetch(URL_ENVIO_FORMS, {
+        method: 'POST',
+        mode: 'no-cors',
+        body: dadosFormulario
+      })
+      .then(() => {
+        // Como 'no-cors' não retorna leitura da resposta, se não caiu no catch, foi enviado!
+        msg.className = 'sucesso';
+        msg.innerText = 'Inscrição confirmada com sucesso! Nos vemos no treinamento.';
+        msg.style.display = 'block';
+        document.getElementById('formInscricao').reset();
+      })
+      .catch((erro) => {
+        msg.className = 'erro';
+        msg.innerText = 'Ocorreu um erro de conexão. Verifique sua internet e tente novamente.';
+        msg.style.display = 'block';
+        console.error('Erro:', erro);
+      })
+      .finally(() => {
+        btn.disabled = false;
+        btn.innerText = 'Confirmar Inscrição';
+      });
+    }
+  </script>
+
+</body>
+</html>
