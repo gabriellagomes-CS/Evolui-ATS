@@ -112,6 +112,11 @@
           <input type="text" id="empresa" placeholder="Nome da sua empresa" required>
         </div>
 
+        <div class="form-group">
+          <label for="telefone">Telefone</label>
+          <input type="tel" id="telefone" placeholder="(11) 99999-9999" required>
+        </div>
+
         <button type="submit" id="btnEnviar">Confirmar Inscrição</button>
       </form>
 
@@ -124,6 +129,7 @@
     const ID_CAMPO_NOME    = "entry.2021482454";
     const ID_CAMPO_EMAIL   = "entry.1810517846";
     const ID_CAMPO_EMPRESA = "entry.1150958815";
+    cont ID_CAMPO_TELEFONE = "entry.1858237478";
 
     function enviarParaGoogleForms(event) {
       event.preventDefault();
@@ -139,6 +145,7 @@
       dadosFormulario.append(ID_CAMPO_NOME, document.getElementById('nome').value.trim());
       dadosFormulario.append(ID_CAMPO_EMAIL, document.getElementById('email').value.trim());
       dadosFormulario.append(ID_CAMPO_EMPRESA, document.getElementById('empresa').value.trim());
+      dadosFormulario.append(ID_CAMPO_EMPRESA, document.getElementById('telefone').value.trim());
 
       fetch(URL_ENVIO_FORMS, {
         method: 'POST',
